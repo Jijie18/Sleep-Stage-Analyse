@@ -18,7 +18,7 @@ The data of each file has two attributes: `savedata1` and `time`.
 `time` is usually as same as the name of current file.
 
 `savedata1` contains 4 columns, the first three column is
-- x_dis the distance from
+- x_dis the distance from in x direction
 - y_dis the distance from radar in y direction
 - speed
 - snr value
