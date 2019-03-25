@@ -62,9 +62,7 @@ if __name__ == '__main__':
 
     # 2----wake   1----light sleep   0----deep sleep
 
-    X = [[0], [1], [2], [3]]
-    Y = [0, 1, 2, 3]
-    clf = SVC(decision_function_shape='ovr')
+    clf = SVC(decision_function_shape='ovr', kernel="rbf")
     # a.一对多法（one-versus-rest, 简称1-v-r SVMs）。
     # 训练时依次把某个类别的样本归为一类, 其他剩余的样本归为另一类，
     # 这样k个类别的样本就构造出了k个SVM。分类时将未知样本分类为具有最大分类函数值的那类。

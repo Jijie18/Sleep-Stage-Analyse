@@ -36,20 +36,23 @@ if __name__ == '__main__':
             feature[index][2] = speed_tmp.mean()
             feature[index][3] = speed_tmp.var()
             feature[index][4] = snr_tmp.mean()
-            feature[index][5] = feature[index-1][5]
-            feature[index][6] = feature[index-1][6]
-            feature[index][7] = feature[index-1][7]
-            feature[index][8] = feature[index-1][8]
-            feature[index][9] = feature[index-1][9]
+            try:
+                feature[index][5] = speed_tmp.min()
+                feature[index][6] = speed_tmp.max()
+                feature[index][7] = snr_tmp.min()
+                feature[index][8] = snr_tmp.max()
+            except:
+                pass
+            feature[index][9] = feature[index-1][4]
             index = index+1
+        #
+        # feature[0][5] = feature[- 1][5]
+        # feature[0][6] = feature[- 1][6]
+        # feature[0][7] = feature[- 1][7]
+        # feature[0][8] = feature[- 1][8]
+        feature[0][9] = feature[- 1][4]
 
-        feature[0][5] = feature[- 1][5]
-        feature[0][6] = feature[- 1][6]
-        feature[0][7] = feature[- 1][7]
-        feature[0][8] = feature[- 1][8]
-        feature[0][9] = feature[- 1][9]
-
-        np.save(k, feature)
+        np.save("feature/"+k, feature)
         print("C", k)
 
 
