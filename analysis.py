@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import load_mat
 
-data = np.load('feature/20190215.npy')
+data = load_mat.get_feature_sample("G:/资料/Radar_Sleep_pointCloud/20190130", col_name="30th Jan")[0:200]
 
 
 def compare_speed():
@@ -59,4 +60,4 @@ if __name__ == '__main__':
     compare_other(3, 'snr_var')
     compare_other(4, 'speed_mean')
     compare_other(5, 'snr_mean')
-    compare_other(7, 'strong_rate')
+    compare_other(6, 'strong_rate')
