@@ -40,12 +40,11 @@ class SVM:
         return np.dot(x_test, self.w)
 
 
-def validate(path):
-    test_case = np.load(path)
+def validate(test_case):
     ground_truth_test = test_case[:, -1]
     test_case = test_case[:, 0:-1]
     test_prer = clf.predict(test_case)
-    print(path, sum([1 if _ == 0 else 0 for _ in (test_prer - ground_truth_test)]) / len(test_case))
+    print("validate correct rate", sum([1 if _ == 0 else 0 for _ in (test_prer - ground_truth_test)]) / len(test_case))
 
 
 if __name__ == '__main__':
@@ -61,7 +60,12 @@ if __name__ == '__main__':
     data = np.r_[data, np.load('feature/20190203.npy')]
     data = np.r_[data, np.load('feature/20190131.npy')]
     data = np.r_[data, np.load('feature/20190130.npy')]
-    # data = np.r_[data, np.load('feature/20190128.npy')]
+    data = np.r_[data, np.load('feature/20190128.npy')]
+
+    np.random.shuffle(data)
+    train_data_num = int(len(data)*0.7)
+    test_data = data[train_data_num:]
+    data = data[0:train_data_num]
 
     # 2----wake   1----light sleep   0----deep sleep
     ground_truth = data[:, -1]
@@ -74,12 +78,6 @@ if __name__ == '__main__':
 
     clf.fit(input_data, ground_truth)
     prer = clf.predict(input_data)
-    print(sum([1 if _== 0 else 0 for _ in (prer-ground_truth)])/len(input_data))
+    print("train result(correct rate)", sum([1 if _== 0 else 0 for _ in (prer-ground_truth)])/len(input_data))
 
-    validate('feature/20190128.npy')
-    validate('feature/20190130.npy')
-    validate('feature/20190131.npy')
-    validate('feature/20190203.npy')
-    validate('feature/20190204.npy')
-    validate('feature/20190207.npy')
-    validate('feature/20190209.npy')
+    validate(test_data)
