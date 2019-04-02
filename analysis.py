@@ -70,13 +70,13 @@ def compare_other(col, col_label):
 
 
 if __name__ == '__main__':
-    data = load_mat.get_feature_sample("G:/资料/Radar_Sleep_pointCloud/20190130", col_name="30th Jan")
-    compare_speed()
-    compare_snr()
-    compare_other(2, 'speed_var')
-    compare_other(3, 'snr_var')
-    compare_other(4, 'x_var')
-    compare_other(5, 'y_var')
-    compare_other(6, 'speed_mean')
-    compare_other(7, 'snr_mean')
+    data = load_mat.get_feature_sample("G:/资料/Radar_Sleep_pointCloud/20190211", col_name="11th Feb")
+    # compare_speed()
+    # compare_snr()
+    # compare_other(2, 'speed_var')
+    # compare_other(3, 'snr_var')
+    # compare_other(4, 'x_var')
+    # compare_other(5, 'y_var')
+    # compare_other(6, 'speed_mean')
+    # compare_other(7, 'snr_mean')
     compare_other(8, 'strong_rate')

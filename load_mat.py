@@ -27,17 +27,16 @@ def get_feature_sample(path, ground_truth=None, col_name=None):
 
         # all of those information stored in data_all format [distance_x, distance_y, speed, snr]
         all_data = []
-        dataSeg = []  # stores the segment data between two 999
+        dataFrame = []  # stores the frame data between two 999
         hasInfo = False
-
         for j in data:
             if j[0] == 999:
                 if hasInfo:
                     hasInfo = False
-                    res = process_frame(dataSeg)
+                    res = process_frame(dataFrame)
                     all_data.append(res)
             else:  # the state has been hasInfo, just add info to it
-                dataSeg.append(j)
+                dataFrame.append(j)
                 hasInfo = True
         features[index][-1] = ground_truth[index]
         if not all_data:

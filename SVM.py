@@ -46,7 +46,7 @@ def validate(test_case):
     test_case = test_case[:, 0:-1]
     test_prer = clf.predict(test_case)
     print("validate correct rate", sum([1 if _ == 0 else 0 for _ in (test_prer - ground_truth_test)]) / len(test_case))
-    corr_res = correct(test_prer, window=15)
+    corr_res = correct(test_prer, window=10)
     print("correct train result(correct rate)",
           sum([1 if _ == 0 else 0 for _ in (corr_res - ground_truth_test)]) / len(test_case), '\n')
 
@@ -55,7 +55,7 @@ def validate(test_case):
 
 def correct(prer, window=5):
     """
-    :return: correct predict result, look the 5 data point around to correct
+    :return: correct the predict result, look the 5 nearest data point around, and rejudge current stage
     """
     correct_res = prer.copy()
     count = [0, 0, 0]
@@ -84,37 +84,49 @@ def correct(prer, window=5):
     return correct_res
 
 
+class DataLoader:
+
+    def __init__(self, raw_data):
+        train_data_num = int(0.7 * len(raw_data))
+        self.test_data = raw_data[train_data_num:]
+        self.train_data = raw_data[0: train_data_num]
+
+    def add_data(self, path):
+        all_data = np.load(path)
+        train_data_num = int(0.7 * len(all_data))
+        self.train_data = np.row_stack((self.train_data, all_data[0: train_data_num]))
+        self.test_data = np.row_stack((self.test_data, all_data[train_data_num:]))
+
+
 if __name__ == '__main__':
-    data = np.load('feature/20190215.npy')
-    # data = np.r_[data, np.load('feature/20190214.npy')]
-    # data = np.r_[data, np.load('feature/20190213.npy')]
-    data = np.r_[data, np.load('feature/20190212.npy')]
-    data = np.r_[data, np.load('feature/20190211.npy')]
-    data = np.r_[data, np.load('feature/20190210.npy')]
-    data = np.r_[data, np.load('feature/20190209.npy')]
-    data = np.r_[data, np.load('feature/20190207.npy')]
-    # data = np.r_[data, np.load('feature/20190204.npy')]
-    # data = np.r_[data, np.load('feature/20190203.npy')]
-    data = np.r_[data, np.load('feature/20190131.npy')]
-    data = np.r_[data, np.load('feature/20190130.npy')]
-    data = np.r_[data, np.load('feature/20190128.npy')]
 
-    test_data0 = np.load('feature/20190214.npy')
-    test_data1 = np.load('feature/20190213.npy')
-    data = np.r_[data, test_data0]
-    data = np.r_[data, test_data1]
+    raw_data = np.load('feature/20190215.npy')
 
-    test_data2 = np.load('feature/20190204.npy')
-    test_data3 = np.load('feature/20190203.npy')
+    data_set = DataLoader(raw_data)
+       # data_set.add_data('feature/20190214.npy')
+    # data_set.add_data('feature/20190213.npy')
+    # data_set.add_data('feature/20190212.npy')
+    # data_set.add_data('feature/20190211.npy')
+    # data_set.add_data('feature/20190210.npy')
+    # data_set.add_data('feature/20190209.npy')
+    # # data_set.add_data('feature/20190207.npy')
+    # data_set.add_data('feature/20190204.npy')
+    # # data_set.add_data('feature/20190203.npy')
+    # data_set.add_data('feature/20190131.npy')
+    # data_set.add_data('feature/20190130.npy')
+    # data_set.add_data('feature/20190128.npy')
 
-    np.random.shuffle(data)
-    train_data_num = int(len(data) * 0.7)
-    test_data = data[train_data_num:]
-    data = data[0:train_data_num]
+    test_data0 = np.load('feature/20190215.npy')
+    test_data1 = np.load('feature/20190214.npy')
+    test_data2 = np.load('feature/20190209.npy')
+    test_data3 = np.load('feature/20190207.npy')
+    test_data4 = np.load('feature/20190203.npy')
+
+    # np.random.shuffle(data)
 
     # 2----wake   1----light sleep   0----deep sleep
-    ground_truth = data[:, -1]
-    input_data = data[:, 0:-1]
+    ground_truth = data_set.train_data[:, -1]
+    input_data = data_set.train_data[:, 0:-1]
 
     clf = SVC(C=1, decision_function_shape='ovr', gamma='auto', kernel="rbf")
     # a.一对多法（one-versus-rest, 简称1-v-r SVMs）。
@@ -125,12 +137,17 @@ if __name__ == '__main__':
     prer = clf.predict(input_data)
     print("train result", sum([1 if _ == 0 else 0 for _ in (prer - ground_truth)]) / len(input_data))
 
-    validate(test_data)
+    test_res, corr = validate(data_set.test_data)
+    analysis.compare_truth(data_set.test_data, test_res)
+    analysis.compare_truth(data_set.test_data, corr)
+
     print("test data result(whole night):\n")
     test_res0, corr0 = validate(test_data0)
     test_res1, corr1 = validate(test_data1)
     test_res2, corr2 = validate(test_data2)
     test_res3, corr3 = validate(test_data3)
+    test_res4, corr4 = validate(test_data4)
+
     analysis.compare_truth(test_data0, test_res0)
     analysis.compare_truth(test_data0, corr0)
 
@@ -142,3 +159,6 @@ if __name__ == '__main__':
 
     analysis.compare_truth(test_data3, test_res3)
     analysis.compare_truth(test_data3, corr3)
+
+    analysis.compare_truth(test_data4, test_res4)
+    analysis.compare_truth(test_data4, corr4)
