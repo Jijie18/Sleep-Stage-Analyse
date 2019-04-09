@@ -22,3 +22,9 @@ The data of each file has two attributes: `savedata1` and `time`.
 - y_dis the distance from radar in y direction
 - speed
 - snr value
+
+
+use nertural work.
+
+more features (max 10%, max 20% || push data in frame)
+more data(espeicially weak)
